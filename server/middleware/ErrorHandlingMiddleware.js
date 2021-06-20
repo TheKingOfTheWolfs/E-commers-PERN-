@@ -1,4 +1,4 @@
-// const { DatabaseError } = require('pg-protocol/dist/messages')
+const { DatabaseError } = require('pg-protocol/dist/messages')
 const ApiError = require('../error/ApiError')
 
 
