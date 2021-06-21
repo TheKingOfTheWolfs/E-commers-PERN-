@@ -1,19 +1,28 @@
-import React from 'react'
+import React, {useContext} from 'react'
 import { Switch, Route, Redirect} from 'react-router-dom'
 import { authRoutes, publicRoutes } from '../routes'
+import { SHOP_ROUTE } from '../utils/const'
+import {Context} from '../index'
 
+
+
+//Routing connected to "Global storage" for data
 function AppRouter() {
+    const {user} = useContext(Context)
+
+    console.log(user)
     const isAuth = false
     return (
         <Switch>
-            {isAuth && authRoutes.map(({path, Component}) =>
+            {user.isAuth && authRoutes.map(({path, Component}) =>
                 <Route key={path} path={path} component={Component} exact/>
             )}
             {publicRoutes.map(({path, Component}) =>
                 <Route key={path} path={path} component={Component} exact/>
             )}
+            <Redirect to={SHOP_ROUTE}/>
         </Switch>
-    )
-}
+    );
+};
 
-export default AppRouter
+export default AppRouter;
