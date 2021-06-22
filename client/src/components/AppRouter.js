@@ -1,17 +1,14 @@
-import React, {useContext} from 'react'
-import { Switch, Route, Redirect} from 'react-router-dom'
-import { authRoutes, publicRoutes } from '../routes'
-import { SHOP_ROUTE } from '../utils/const'
-import {Context} from '../index'
+import React, {useContext} from 'react';
+import {Switch, Route, Redirect} from 'react-router-dom'
+import {authRoutes, publicRoutes} from "../utils/routes";
+import {SHOP_ROUTE} from "../utils/const";
+import {Context} from "../index";
+import {observer} from "mobx-react-lite";
 
-
-
-//Routing connected to "Global storage" for data
-function AppRouter() {
+const AppRouter = observer(() => {
     const {user} = useContext(Context)
 
     console.log(user)
-    const isAuth = false
     return (
         <Switch>
             {user.isAuth && authRoutes.map(({path, Component}) =>
@@ -23,6 +20,6 @@ function AppRouter() {
             <Redirect to={SHOP_ROUTE}/>
         </Switch>
     );
-};
+});
 
 export default AppRouter;
