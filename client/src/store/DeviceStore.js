@@ -1,4 +1,4 @@
-//MOBX
+//Inventory MOBX
 
 import {makeAutoObservable} from "mobx";
 
@@ -6,7 +6,9 @@ export default class DeviceStore {
     constructor() {
         this._types = [
             {id: 1, name: 'Fridges'},
-            {id: 2, name: 'Smartphones'}
+            {id: 2, name: 'Smartphones'},
+            {id: 3, name: 'Laptops'},
+            {id: 4, name: 'Keyboards'},
         ]
         this._brands = [
             {id: 1, name: 'Smasung'},
@@ -19,6 +21,8 @@ export default class DeviceStore {
             {id: 3, name: "Iphone 12 pro", price: '1200', rating: 5,  img: 'https://purposechurch.com/wp-content/uploads/2017/10/fpo400x300.png'},
             {id: 4, name: "Iphone 12 pro", price: '1200', rating: 5,  img: 'https://purposechurch.com/wp-content/uploads/2017/10/fpo400x300.png'}
     ],
+
+        this._selectedType = {}
           
         makeAutoObservable(this)
     }
@@ -36,6 +40,10 @@ setDevicex (devices) {
     this._devices = devices
 }
 
+setSelectedType(type) {
+       this._selectedType = type
+}
+
 get types() {
     return this._types
 }
@@ -45,6 +53,10 @@ get brands() {
 }
 get devices() {
     return this._devices
+}
+
+get selectedType() {
+    return this._selectedType
 }
 
 }
