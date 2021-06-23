@@ -12,7 +12,9 @@ export default class DeviceStore {
         ]
         this._brands = [
             {id: 1, name: 'Smasung'},
-            {id: 2, name: 'Apple'} 
+            {id: 2, name: 'Apple'} ,
+            {id: 3, name: 'Lenovo'} ,
+            {id: 4, name: 'Asus'} ,
         ]
 
         this._devices = [

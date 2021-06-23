@@ -4,7 +4,7 @@ import {makeAutoObservable} from "mobx";
 
 export default class UserStore {
     constructor() {
-        this._isAuth = false //( _ means state can't be changed)
+        this._isAuth = true //( _ means state can't be changed)
         this._user = {}
         makeAutoObservable(this)
     }
