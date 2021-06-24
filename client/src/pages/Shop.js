@@ -1,10 +1,18 @@
-import React from 'react'
+import React, { useContext, useEffect } from 'react'
 import {Container, Form, Button, Row, Col} from "react-bootstrap"
 import BrandBar from '../components/BrandBar'
 import TypeBar from '../components/TypeBar'
 import DeviceList from '../components/DeviceList'
+import { observer } from 'mobx-react-lite'
+import { Context } from '..'
+import { fetchTypes } from '../http/deviceAPI'
 
-const Shop = () => {
+const Shop = observer(() => {
+    const {device} = useContext(Context)
+
+    useEffect(() => {
+         fetchTypes().then(data => device.setTypes(data))
+    }, [])
     return (
         
          <Container>
@@ -20,6 +28,6 @@ const Shop = () => {
          </Container>   
         
     )
-}
+})
 
 export default Shop
