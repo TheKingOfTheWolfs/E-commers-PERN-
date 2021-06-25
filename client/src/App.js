@@ -12,7 +12,7 @@ const App = observer(() => {
   const {user} = useContext(Context)
   const [loading, setLoading] = useState(true)
 
-  //One time loggining in check
+  //One time loggining in token check
   useEffect(() => {
       check().then(data => {
         user.setUser(true)

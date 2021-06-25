@@ -5,13 +5,16 @@ import TypeBar from '../components/TypeBar'
 import DeviceList from '../components/DeviceList'
 import { observer } from 'mobx-react-lite'
 import { Context } from '..'
-import { fetchTypes } from '../http/deviceAPI'
+import { fetchTypes, fetchBrands, fetchDevices } from '../http/deviceAPI'
 
 const Shop = observer(() => {
     const {device} = useContext(Context)
 
+    //fetch the data from the database to display in SHOP
     useEffect(() => {
          fetchTypes().then(data => device.setTypes(data))
+         fetchBrands().then(data => device.setBrands(data))
+         fetchDevices().then(data => device.setDevices(data.rows))
     }, [])
     return (
         
