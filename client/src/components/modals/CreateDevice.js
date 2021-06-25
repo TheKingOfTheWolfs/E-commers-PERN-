@@ -1,69 +1,129 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Modal from "react-bootstrap/Modal";
-import { Form, Button, Dropdown, Row, Col } from "react-bootstrap";
-import { Context } from "../..";
+import { Button, Dropdown, Form, Row, Col } from "react-bootstrap";
+import { Context } from "../../index";
+import {
+  createDevice,
+  fetchBrands,
+  fetchDevices,
+  fetchTypes,
+} from "../../http/deviceAPI";
+import { observer } from "mobx-react-lite";
 
-const CreateDevice = ({ show, onHide }) => {
+const CreateDevice = observer(({ show, onHide }) => {
   const { device } = useContext(Context);
-  const [info, setinfo] = useState([]);
+  const [name, setName] = useState("");
+  const [price, setPrice] = useState('');
+  const [file, setFile] = useState(null);
+  const [info, setInfo] = useState([]);
+
+  useEffect(() => {
+    fetchTypes().then((data) => device.setTypes(data));
+    fetchBrands().then((data) => device.setBrands(data));
+  }, []);
 
   const addInfo = () => {
-    setinfo([...info, { title: '', description: '', number: Date.now() }]);
+    setInfo([...info, { title: "", description: "", number: Date.now() }]);
+  };
+  const removeInfo = (number) => {
+    setInfo(info.filter((i) => i.number !== number));
+  };
+  const changeInfo = (key, value, number) => {
+    setInfo(
+      info.map((i) => (i.number === number ? { ...i, [key]: value } : i))
+    );
   };
 
-  const removeInfo = (number) => {
-    setinfo(info.filter(i => i.number !== number));
+  const selectFile = (e) => {
+    setFile(e.target.files[0]);
+  };
+
+  const addDevice = () => {
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("price", `${price}`);
+    formData.append("img", file);
+    formData.append("brandId", device.selectedBrand.id);
+    formData.append("typeId", device.selectedType.id);
+    formData.append("info", JSON.stringify(info));
+    createDevice(formData).then((data) => onHide());
   };
 
   return (
-    <Modal
-      show={show}
-      onHide={onHide}
-      size="lg"
-      aria-labelledby="contained-modal-title-vcenter"
-      centered
-    >
+    <Modal show={show} onHide={onHide} centered>
       <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">Add Device</Modal.Title>
+        <Modal.Title id="contained-modal-title-vcenter">
+          Add Device
+        </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form>
           <Dropdown className="mt-2 mb-2">
-            <Dropdown.Toggle>Choose Type</Dropdown.Toggle>
+            <Dropdown.Toggle>
+              {device.selectedType.name || "Choose Type"}
+            </Dropdown.Toggle>
             <Dropdown.Menu>
               {device.types.map((type) => (
-                <Dropdown.Item key={type.id}>{type.name}</Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => device.setSelectedType(type)}
+                  key={type.id}
+                >
+                  {type.name}
+                </Dropdown.Item>
               ))}
             </Dropdown.Menu>
           </Dropdown>
           <Dropdown className="mt-2 mb-2">
-            <Dropdown.Toggle>Choose Brand</Dropdown.Toggle>
+            <Dropdown.Toggle>
+              {device.selectedBrand.name || "Choose Brand"}
+            </Dropdown.Toggle>
             <Dropdown.Menu>
               {device.brands.map((brand) => (
-                <Dropdown.Item key={brand.id}>{brand.name}</Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => device.setSelectedBrand(brand)}
+                  key={brand.id}
+                >
+                  {brand.name}
+                </Dropdown.Item>
               ))}
             </Dropdown.Menu>
           </Dropdown>
-          <Form.Control placeholder={"Enter device name"} className="mt-3" />
           <Form.Control
-            placeholder={"Enter price"}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
             className="mt-3"
+            placeholder="Enter device name"
+          />
+          <Form.Control
+            value={price}
+            onChange={(e) => setPrice(Number(e.target.value))}
+            className="mt-3"
+            placeholder="Enter price"
             type="number"
           />
-          <Form.Control className="mt-4 mb-2" type="file" />
+          <Form.Control className="mt-3" type="file" onChange={selectFile} />
+          <hr />
           <Button variant={"outline-dark"} onClick={addInfo}>
-            Add Description
+            Add new 
           </Button>
           {info.map((i) => (
             <Row className="mt-4" key={i.number}>
               <Col md={4}>
                 <Form.Control
-                  placeholder="Enter device name"
+                  value={i.title}
+                  onChange={(e) =>
+                    changeInfo("title", e.target.value, i.number)
+                  }
+                  placeholder="Info"
                 />
               </Col>
               <Col md={4}>
                 <Form.Control
-                  placeholder="Enter device description"
+                  value={i.description}
+                  onChange={(e) =>
+                    changeInfo("description", e.target.value, i.number)
+                  }
+                  placeholder="Description"
                 />
               </Col>
               <Col md={4}>
@@ -71,7 +131,7 @@ const CreateDevice = ({ show, onHide }) => {
                   onClick={() => removeInfo(i.number)}
                   variant={"outline-danger"}
                 >
-                  Remove
+                  Delete
                 </Button>
               </Col>
             </Row>
@@ -82,12 +142,12 @@ const CreateDevice = ({ show, onHide }) => {
         <Button variant="outline-danger" onClick={onHide}>
           Close
         </Button>
-        <Button variant="outline-success" onClick={onHide}>
+        <Button variant="outline-success" onClick={addDevice}>
           Add
         </Button>
       </Modal.Footer>
     </Modal>
   );
-};
+});
 
 export default CreateDevice;
