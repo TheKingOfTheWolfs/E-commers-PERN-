@@ -1,5 +1,3 @@
-//Inventory MOBX
-
 import {makeAutoObservable} from "mobx";
 
 export default class DeviceStore {
@@ -9,45 +7,59 @@ export default class DeviceStore {
         this._devices = []
         this._selectedType = {}
         this._selectedBrand = {}
-          
+        this._page = 1 //curent page
+        this._totalCount = 0 //total number of devices spicifit to type (default)
+        this._limit = 1 // number of products per page
         makeAutoObservable(this)
     }
 
+    setTypes(types) {
+        this._types = types
+    }
+    setBrands(brands) {
+        this._brands = brands
+    }
+    setDevices(devices) {
+        this._devices = devices
+    }
 
-setTypes (types) {
-    this._types = types
-}
+    setSelectedType(type) {
+        this.setPage(1)
+        this._selectedType = type
+    }
+    setSelectedBrand(brand) {
+        this.setPage(1)
+        this._selectedBrand = brand
+    }
+    setPage(page) {
+        this._page = page
+    }
+    setTotalCount(count) {
+        this._totalCount = count
+    }
 
-setBrands (brands) {
-    this._brands = brands
-}
-
-setDevices (devices) {
-    this._devices = devices
-}
-
-setSelectedType(type) {
-       this._selectedType = type
-}
-setSelectedBrand(brand) {
-    this._selectedType = brand
-}
-
-get types() {
-    return this._types
-}
-
-get brands() {
-    return this._brands
-}
-get devices() {
-    return this._devices
-}
-
-get selectedType() {
-    return this._selectedType
-}
-get selectedBrand() {
-    return this._selectedBrand
-}
+    get types() {
+        return this._types
+    }
+    get brands() {
+        return this._brands
+    }
+    get devices() {
+        return this._devices
+    }
+    get selectedType() {
+        return this._selectedType
+    }
+    get selectedBrand() {
+        return this._selectedBrand
+    }
+    get totalCount() {
+        return this._totalCount
+    }
+    get page() {
+        return this._page
+    }
+    get limit() {
+        return this._limit
+    }
 }
