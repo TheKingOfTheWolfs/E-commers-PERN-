@@ -7,9 +7,9 @@ export default class DeviceStore {
         this._devices = []
         this._selectedType = {}
         this._selectedBrand = {}
-        this._page = 1 //curent page
-        this._totalCount = 0 //total number of devices spicifit to type (default)
-        this._limit = 1 // number of products per page
+        this._page = 1
+        this._totalCount = 0
+        this._limit = 3
         makeAutoObservable(this)
     }
 
@@ -31,6 +31,7 @@ export default class DeviceStore {
         this.setPage(1)
         this._selectedBrand = brand
     }
+   
     setPage(page) {
         this._page = page
     }
